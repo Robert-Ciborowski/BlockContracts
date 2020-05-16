@@ -12,7 +12,7 @@ from app import app
 
 # The node with which our application interacts. There can be multiple
 # such nodes.
-CONNECTED_NODE_ADDRESS = "http://127.0.0.1:8000"
+CONNECTED_NODE_ADDRESS = "http://165.22.236.136:8000"
 
 posts = []
 
