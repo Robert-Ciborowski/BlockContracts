@@ -19,7 +19,7 @@ class SeaofBTCapp(tk.Tk):
 
         self.frames = {}
 
-        for F in (StartPage, UploadContract, Signee1, Finish, Signee2, UploadFile, Info1, Info2, Result):
+        for F in (StartPage, UploadContract, Signee1, Finish, Signee2, UploadFile, Info1, Info2, Result, ReadContract, Result2):
 
             frame = F(container, self)
 
@@ -71,7 +71,8 @@ class StartPage(tk.Frame):
         button2.place(x=300, y=375)
 
         # read contract button
-        button3 = tk.Button(self, image=self.readContact_image, bd=0)
+        button3 = tk.Button(self, image=self.readContact_image,
+                            bd=0, command=lambda: controller.show_frame(ReadContract))
         button3.place(x=300, y=460)
 
 
@@ -398,6 +399,83 @@ class Info2(tk.Frame):
 
 class Result(tk.Frame):
 
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        # image for result button
+        self.result = ImageTk.PhotoImage(
+            file='./image/result1.png')
+        self.label = tk.Label(self, image=self.result)
+        self.label.pack(pady=50, padx=10)
+
+        # label for result text
+        self.resultText = tk.Label(
+            self, text='result text 123 123 123', font=LARGE_FONT)
+        self.resultText.pack(pady=60, padx=10)
+
+        # image for home button
+        self.home = ImageTk.PhotoImage(
+            file='./image/home.png')
+
+        button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
+                            command=lambda: controller.show_frame(StartPage))
+        button1.place(x=290, y=450)
+
+
+class ReadContract(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label = tk.Label(self, text="Upload File", font=XLARGE_FONT)
+        self.label.pack(pady=50, padx=10)
+
+        self.file = ''
+
+        # image for upload button
+        self.UploadContract = ImageTk.PhotoImage(
+            file='./image/upload.png')
+
+        # image for home button
+        self.home = ImageTk.PhotoImage(
+            file='./image/home.png')
+
+        # image for next button
+        self.next = ImageTk.PhotoImage(
+            file='./image/next1.png')
+
+        # button for upload contract
+        button2 = tk.Button(self, text="Page Two",
+                            bd=0, image=self.UploadContract, command=lambda: self.uploadfile())
+        button2.place(x=280, y=250)
+
+        # button for home page
+        button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
+                            command=lambda: controller.show_frame(StartPage))
+        button1.place(x=180, y=490)
+
+        # button for next page
+        button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
+                            command=lambda: controller.show_frame(Result2))
+        button2.place(x=380, y=490)
+
+        # label for file path
+        self.path = tk.Label(self, text="No File been upload yet")
+        self.path.pack(pady=270, padx=7)
+
+        # label for state
+        self.inputState = tk.Label(self, text="")
+        self.inputState.place(x=340, y=450)
+
+    def uploadfile(self):
+        self.file = filedialog.askopenfilename(
+            initialdir="/", title="Select A File", filetype=(("jpeg", "*.jpg"), ("All Files", "*.*")))
+        self.path.configure(text=self.file)
+        print(self.file)
+        self.after(3000)
+        self.inputState.configure(text="Upload Successful")
+
+
+class Result2(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
