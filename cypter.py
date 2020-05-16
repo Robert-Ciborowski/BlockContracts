@@ -91,22 +91,27 @@ class Decrypt:
         :param key:
         :return:
         """
-        crypter = Fernet(key)
-        message = crypter.decrypt(self.data)
+
         try:
-            if file_path == '':
-                path = self.file
-            else:
-                path = file_path
-            folder = open(path, "wb")
-            folder.write(message)
-            folder.close()
+            crypter = Fernet(key)
+            message = crypter.decrypt(self.data)
+            try:
+
+                if file_path == '':
+                    path = self.file
+                else:
+                    path = file_path
+                folder = open(path, "wb")
+                folder.write(message)
+                folder.close()
+            except:
+                print('Failed to decrypt data')
         except:
-            print('Failed to decrypt data')
+            print("Invalid Key")
 
 
 if __name__ == '__main__':
     # test1 = Encrypt('scrambledEggs')
     # test1.scramble()
     test2 = Decrypt('scrambledEggs')
-    test2.unscramble('MDT6yx2snivdj65z3tURNFAdENy8QfN4x7zA7gf99gc=')
+    test2.unscramble('jOZElgYMezB2_S7LlKSrM850Q21eHxT15gqUGq9sZMs=')
