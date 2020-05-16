@@ -19,7 +19,7 @@ class SeaofBTCapp(tk.Tk):
 
         self.frames = {}
 
-        for F in (StartPage, UploadContract, Signee1, Finish, Signee2):
+        for F in (StartPage, UploadContract, Signee1, Finish, Signee2, UploadFile, Info1, Info2, Result):
 
             frame = F(container, self)
 
@@ -67,7 +67,7 @@ class StartPage(tk.Frame):
 
         # verify contract button
         button2 = tk.Button(self, image=self.verifyContact_image, bd=0,
-                            command=lambda: controller.show_frame(Signee1))
+                            command=lambda: controller.show_frame(UploadFile))
         button2.place(x=300, y=375)
 
         # read contract button
@@ -245,6 +245,173 @@ class Finish(tk.Frame):
         fnishLabel.place(x=320, y=100)
 
         # button for home page
+        # image for home button
+        self.home = ImageTk.PhotoImage(
+            file='./image/home.png')
+
+        button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
+                            command=lambda: controller.show_frame(StartPage))
+        button1.place(x=290, y=450)
+
+
+class UploadFile(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label = tk.Label(self, text="Upload File", font=XLARGE_FONT)
+        self.label.pack(pady=50, padx=10)
+
+        self.file = ''
+
+        # image for upload button
+        self.UploadContract = ImageTk.PhotoImage(
+            file='./image/upload.png')
+
+        # image for home button
+        self.home = ImageTk.PhotoImage(
+            file='./image/home.png')
+
+        # image for next button
+        self.next = ImageTk.PhotoImage(
+            file='./image/next1.png')
+
+        # button for upload contract
+        button2 = tk.Button(self, text="Page Two",
+                            bd=0, image=self.UploadContract, command=lambda: self.uploadfile())
+        button2.place(x=280, y=250)
+
+        # button for home page
+        button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
+                            command=lambda: controller.show_frame(StartPage))
+        button1.place(x=180, y=450)
+
+        # button for next page
+        button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
+                            command=lambda: controller.show_frame(Info1))
+        button2.place(x=380, y=450)
+
+        # label for file path
+        self.path = tk.Label(self, text="No File been upload yet")
+        self.path.pack(pady=270, padx=7)
+
+    def uploadfile(self):
+        self.file = filedialog.askopenfilename(
+            initialdir="/", title="Select A File", filetype=(("jpeg", "*.jpg"), ("All Files", "*.*")))
+        self.path.configure(text=self.file)
+        print(self.file)
+
+
+class Info1(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label = tk.Label(
+            self, text="Enter your information ", font=XLARGE_FONT)
+        self.label.pack(pady=50, padx=10)
+
+        # enter for info
+        infoLabel = tk.Label(self, text="Info", font=LARGE_FONT)
+        infoLabel.place(x=75, y=295)
+        self.info = tk.Entry(self)
+        self.info.place(x=130, y=280, relwidth=0.55, relheight=0.08)
+
+        # button to save
+        self.save = ImageTk.PhotoImage(
+            file='./image/save.png')
+        saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
+            self.info.get()))
+        saveButton.place(x=530, y=235)
+
+        # label for state
+        self.inputState = tk.Label(self, text="")
+        self.inputState.place(x=550, y=350)
+
+        # image for home button
+        self.home = ImageTk.PhotoImage(
+            file='./image/home.png')
+
+        # image for next button
+        self.next = ImageTk.PhotoImage(
+            file='./image/next1.png')
+
+        # button for home page
+        button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
+                            command=lambda: controller.show_frame(StartPage))
+        button1.place(x=180, y=380)
+
+        # button for next page
+        button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
+                            command=lambda: controller.show_frame(Info2))
+        button2.place(x=380, y=380)
+
+    def saveInfo(self, info):
+        print(info)
+        self.inputState.configure(text="Save Successful")
+
+
+class Info2(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label = tk.Label(
+            self, text="Enter person #2 information", font=XLARGE_FONT)
+        self.label.pack(pady=50, padx=10)
+     # enter for info
+        infoLabel = tk.Label(self, text="Info", font=LARGE_FONT)
+        infoLabel.place(x=75, y=295)
+        self.info = tk.Entry(self)
+        self.info.place(x=130, y=280, relwidth=0.55, relheight=0.08)
+
+        # button to save
+        self.save = ImageTk.PhotoImage(
+            file='./image/save.png')
+        saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
+            self.info.get()))
+        saveButton.place(x=530, y=235)
+
+        # label for state
+        self.inputState = tk.Label(self, text="")
+        self.inputState.place(x=550, y=350)
+
+        # image for home button
+        self.home = ImageTk.PhotoImage(
+            file='./image/home.png')
+
+        # image for next button
+        self.next = ImageTk.PhotoImage(
+            file='./image/next1.png')
+
+        # button for home page
+        button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
+                            command=lambda: controller.show_frame(StartPage))
+        button1.place(x=180, y=380)
+
+        # button for next page
+        button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
+                            command=lambda: controller.show_frame(Result))
+        button2.place(x=380, y=380)
+
+    def saveInfo(self, info):
+        print(info)
+        self.inputState.configure(text="Save Successful")
+
+
+class Result(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        # image for result button
+        self.result = ImageTk.PhotoImage(
+            file='./image/result1.png')
+        self.label = tk.Label(self, image=self.result)
+        self.label.pack(pady=50, padx=10)
+
+        # label for result text
+        self.resultText = tk.Label(
+            self, text='result text 123 123 123', font=LARGE_FONT)
+        self.resultText.pack(pady=60, padx=10)
+
         # image for home button
         self.home = ImageTk.PhotoImage(
             file='./image/home.png')
