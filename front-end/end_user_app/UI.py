@@ -5,12 +5,20 @@ from tkinter import filedialog
 import image
 import time as time
 from user_http import UserHTTP
+from utils.cypter import Encrypt, Decrypt
+from utils.StringSplitter import StringSplitter
+from contracts.contract import Contract
 
 LARGE_FONT = ("Verdana", 12)
 XLARGE_FONT = ("Verdana", 30)
 
 
 class EndUserApp(tk.Tk):
+    contract = None
+
+    userHTTP: UserHTTP
+    currentContract: Contract
+
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         container = tk.Frame(self)
@@ -36,6 +44,7 @@ class EndUserApp(tk.Tk):
         self.userHTTP.create_new_blockchain_transaction(post_object)
         time.sleep(1)
         print(self.userHTTP.mine_transaction())
+        self.currentContract = None
 
     def show_frame(self, cont):
         frame = self.frames[cont]
@@ -88,6 +97,7 @@ class UploadContract(tk.Frame):
         self.label = tk.Label(self, text="Upload Contract", font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
         self.contract = ''
+        self.controller = controller
 
         # image for upload button
         self.UploadContract = ImageTk.PhotoImage(
@@ -113,7 +123,7 @@ class UploadContract(tk.Frame):
 
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
-                            command=lambda: controller.show_frame(Signee1))
+                            command=lambda: self.onNext())
         button2.place(x=380, y=450)
 
         # label for file path
@@ -122,17 +132,28 @@ class UploadContract(tk.Frame):
 
     def uploadfile(self):
         self.contract = filedialog.askopenfilename(
-            initialdir="/", title="Select A File", filetype=(("jpeg", "*.jpg"), ("All Files", "*.*")))
+            initialdir="/", title="Select A File", filetype=(("text", "*.txt"), ("All Files", "*.*")))
         self.path.configure(text=self.contract)
         print(self.contract)
 
+    def onNext(self):
+        try:
+            EndUserApp.contract = Contract()
+            f = open(self.contract, "r")
+            text = f.read()
+            EndUserApp.contract.data = text
+            self.controller.show_frame(Signee1)
+        except:
+            self.path.configure(text="Please upload a valid contract!")
+
+
 
 class Signee1(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.label = tk.Label(self, text="Signee #1", font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
+        self.controller = controller
 
         # enter for info
         infoLabel = tk.Label(self, text="Info", font=LARGE_FONT)
@@ -172,8 +193,14 @@ class Signee1(tk.Frame):
 
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
-                            command=lambda: controller.show_frame(Signee2))
+                            command=lambda: self.onNext())
         button2.place(x=380, y=380)
+
+    def onNext(self):
+        name = self.name.get()
+        info = self.info.get()
+        encrypter = 
+        self.controller.show_frame(Signee2)
 
     def saveInfo(self, name, info):
         print(name)
