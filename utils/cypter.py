@@ -54,7 +54,7 @@ class Encrypt:
             folder.write(self.data)
             folder.close()
 
-            folder = open('keys.key', 'wb')
+            folder = open('../keys.key', 'wb')
             folder.write(self.key)
             folder.close()
         except:
@@ -113,6 +113,6 @@ class Decrypt:
 if __name__ == '__main__':
     # test1 = Encrypt('buzzfed.html')
     # test1.scramble()
-    test2 = Decrypt('buzzfed.html')
+    test2 = Decrypt('../buzzfed.html')
     test2.unscramble('bWOfotVxNfOUJaVVsewl9jMy2iS2vR9sgOC6CQ9tIO8=')
 
