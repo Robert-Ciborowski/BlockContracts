@@ -1,24 +1,31 @@
 """
 A class which represents a corporate contract.
 """
+
 import csv
 from typing import List
 
 
 class Contract:
     data: str
+    encrypted_data: str
     encryption_key: str
     block_of_chain: int
     digital_signatures: List
 
     def Contract(self):
         self.data = ""
+        self.encrypted_data = ""
         self.encryption_key = ""
         self.block_of_chain = 0
         self.digital_signatures = []
 
-    def addDigitalDisgnature(self, signature: str):
+    def add_digital_sisgnature(self, signature: str):
         self.digital_signatures.append(signature)
+
+    def encrypt_data(self) -> str:
+        print("REPLACE THIS WITH STUFF")
+        return self.encrypted_data
 
     def export_to_file(self, path: str, whichSignature: int):
         if whichSignature < 0 or whichSignature >= len(self.digital_signatures):
