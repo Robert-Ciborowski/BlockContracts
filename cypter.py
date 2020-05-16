@@ -111,7 +111,8 @@ class Decrypt:
 
 
 if __name__ == '__main__':
-    # test1 = Encrypt('scrambledEggs')
+    # test1 = Encrypt('buzzfed.html')
     # test1.scramble()
-    test2 = Decrypt('scrambledEggs')
-    test2.unscramble('jOZElgYMezB2_S7LlKSrM850Q21eHxT15gqUGq9sZMs=')
+    test2 = Decrypt('buzzfed.html')
+    test2.unscramble('bWOfotVxNfOUJaVVsewl9jMy2iS2vR9sgOC6CQ9tIO8=')
+
