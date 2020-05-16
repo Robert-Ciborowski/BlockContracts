@@ -1,2 +1,2 @@
 cd front-end/blockchain_test_app
-flask run --port 8001 &
+python3 start_blockchain_test_app.py
