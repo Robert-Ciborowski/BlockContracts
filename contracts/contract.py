@@ -25,9 +25,10 @@ class Contract:
 
     def encrypt_data(self) -> str:
         print("REPLACE THIS WITH STUFF")
+        self.encrypted_data = self.data
         return self.encrypted_data
 
-    def export_to_file(self, path: str, whichSignature: int):
+    def export_to_files(self, path: str, whichSignature: int):
         if whichSignature < 0 or whichSignature >= len(self.digital_signatures):
             raise Exception(str(whichSignature + " does not exist!"))
 

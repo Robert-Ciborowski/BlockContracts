@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import ImageTk, Image
 from tkinter import ttk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import image
 import time as time
 from user_http import UserHTTP
@@ -15,7 +15,6 @@ XLARGE_FONT = ("Verdana", 30)
 
 class EndUserApp(tk.Tk):
     contract = None
-
     userHTTP: UserHTTP
     currentContract: Contract
 
@@ -25,7 +24,9 @@ class EndUserApp(tk.Tk):
         container.pack(side="top", fill="both", expand=True)
         self.frames = {}
 
-        for F in (StartPage, UploadContract, Signee1, Finish, Signee2, UploadFile, Info1, Info2, Result, ReadContract, Result2):
+        for F in (
+        StartPage, UploadContract, Signee1, Finish, Signee2, UploadFile, Info1,
+        Info2, Result, ReadContract, Result2):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -33,7 +34,6 @@ class EndUserApp(tk.Tk):
         self.show_frame(StartPage)
 
         post_object = {
-            'author': "Tester",
             'content': "Hello world!",
         }
 
@@ -72,12 +72,14 @@ class StartPage(tk.Frame):
             file='image/verify.png')
 
         # image for read contract button
-        self.readContact_image = ImageTk.PhotoImage(  # image for read contact button
+        self.readContact_image = ImageTk.PhotoImage(
+            # image for read contact button
             file='image/read.png')
 
         # create contract button
         button = tk.Button(self, image=self.createContact_image, bd=0,
-                           command=lambda: controller.show_frame(UploadContract))
+                           command=lambda: controller.show_frame(
+                               UploadContract))
         button.place(x=300, y=290)
 
         # verify contract button
@@ -87,7 +89,8 @@ class StartPage(tk.Frame):
 
         # read contract button
         button3 = tk.Button(self, image=self.readContact_image,
-                            bd=0, command=lambda: controller.show_frame(ReadContract))
+                            bd=0,
+                            command=lambda: controller.show_frame(ReadContract))
         button3.place(x=300, y=460)
 
 
@@ -113,7 +116,8 @@ class UploadContract(tk.Frame):
 
         # button for upload contract
         button2 = tk.Button(self, text="Page Two",
-                            bd=0, image=self.UploadContract, command=lambda: self.uploadfile())
+                            bd=0, image=self.UploadContract,
+                            command=lambda: self.uploadfile())
         button2.place(x=280, y=250)
 
         # button for home page
@@ -132,7 +136,8 @@ class UploadContract(tk.Frame):
 
     def uploadfile(self):
         self.contract = filedialog.askopenfilename(
-            initialdir="/", title="Select A File", filetype=(("text", "*.txt"), ("All Files", "*.*")))
+            initialdir="/", title="Select A File",
+            filetype=(("text", "*.txt"), ("All Files", "*.*")))
         self.path.configure(text=self.contract)
         print(self.contract)
 
@@ -147,8 +152,9 @@ class UploadContract(tk.Frame):
             self.path.configure(text="Please upload a valid contract!")
 
 
-
 class Signee1(tk.Frame):
+    signee1Name = ""
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.label = tk.Label(self, text="Signee #1", font=XLARGE_FONT)
@@ -168,11 +174,11 @@ class Signee1(tk.Frame):
         self.name.place(x=330, y=200, relwidth=0.25, relheight=0.08)
 
         # button to save
-        self.save = ImageTk.PhotoImage(
-            file='image/save.png')
-        saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
-            self.name.get(), self.info.get()))
-        saveButton.place(x=530, y=190)
+        # self.save = ImageTk.PhotoImage(
+        #     file='image/save.png')
+        # saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
+        #     self.name.get(), self.info.get()))
+        # saveButton.place(x=530, y=190)
 
         # label for state
         self.inputState = tk.Label(self, text="")
@@ -199,7 +205,18 @@ class Signee1(tk.Frame):
     def onNext(self):
         name = self.name.get()
         info = self.info.get()
-        encrypter = None
+
+        if name == "" or info == "":
+            tk.messagebox.showerror(title="Error",
+                                    message="Name or info is invalid!")
+            return
+
+        Signee1.signee1Name = name
+
+        # encrypt = Encrypt()
+        # add stuff like info = encrypt.scramble(encrypt)
+        # encrypt.scramble()
+        EndUserApp.contract.data += "\n " + name + ": " + info + ", "
         self.controller.show_frame(Signee2)
 
     def saveInfo(self, name, info):
@@ -209,10 +226,13 @@ class Signee1(tk.Frame):
 
 
 class Signee2(tk.Frame):
+    signee2Name = ""
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.label = tk.Label(self, text="Signee #2", font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
+        self.controller = controller
 
         # enter for info
         infoLabel = tk.Label(self, text="Info", font=LARGE_FONT)
@@ -227,11 +247,11 @@ class Signee2(tk.Frame):
         self.name.place(x=330, y=200, relwidth=0.25, relheight=0.08)
 
         # button to save
-        self.save = ImageTk.PhotoImage(
-            file='image/save.png')
-        saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
-            self.name.get(), self.info.get()))
-        saveButton.place(x=530, y=190)
+        # self.save = ImageTk.PhotoImage(
+        #     file='image/save.png')
+        # saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
+        #     self.name.get(), self.info.get()))
+        # saveButton.place(x=530, y=190)
 
         # label for state
         self.inputState = tk.Label(self, text="")
@@ -252,8 +272,26 @@ class Signee2(tk.Frame):
 
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
-                            command=lambda: controller.show_frame(Finish))
+                            command=lambda: self.onNext())
         button2.place(x=380, y=380)
+
+    def onNext(self):
+        name = self.name.get()
+        info = self.info.get()
+
+        if name == "" or info == "":
+            tk.messagebox.showerror(title="Error",
+                                    message="Name or info is invalid!")
+            return
+
+        Signee2.signee2Name = name
+
+        # encrypt = Encrypt()
+        # add stuff like info = encrypt.scramble(encrypt)
+        # encrypt.scramble()
+        EndUserApp.contract.data += name + ": " + info + ", "
+        Finish.uploadContract()
+        self.controller.show_frame(Finish)
 
     def saveInfo(self, name, info):
         print(name)
@@ -262,16 +300,16 @@ class Signee2(tk.Frame):
 
 
 class Finish(tk.Frame):
+    successText = ""
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
         self.finish = ImageTk.PhotoImage(
             file='image/finish1.png')
-
         self.label = tk.Label(self, image=self.finish, font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
 
-        fnishLabel = tk.Label(self, text="Process Completed", font=LARGE_FONT)
+        fnishLabel = tk.Label(self, text=self.successText, font=LARGE_FONT)
         fnishLabel.place(x=320, y=100)
 
         # button for home page
@@ -282,6 +320,35 @@ class Finish(tk.Frame):
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=290, y=450)
+
+    @staticmethod
+    def uploadContract():
+        encrypted_data = EndUserApp.contract.encrypt_data()
+
+        post_object = {
+            'content': "Hello world!",
+        }
+
+        userHTTP = UserHTTP()
+        userHTTP.create_new_blockchain_transaction(post_object)
+        code, text = userHTTP.mine_transaction()
+
+        if code != 200:
+            Finish.successText = "There was an error with creating your secure contract!"
+        else:
+            try:
+                EndUserApp.contract.block_of_chain = int(text)
+                path1 = "/contracts/" + Signee1.signee1Name + ".contract"
+                path2 = "/contracts/" + Signee2.signee2Name + ".contract"
+                EndUserApp.contract.export_to_files(path1, 0)
+                EndUserApp.contract.export_to_files(path2, 1)
+                Finish.successText = "Your secure contract has been completed." \
+                                     "\nSignee #1: " + path1 + "\nSignee #2: " + path2
+            except:
+                print("Error creating final .contract file!")
+                Finish.successText = "There was an error with exporting your contract!"
+
+        EndUserApp.currentContract = None
 
 
 class UploadFile(tk.Frame):
@@ -305,7 +372,8 @@ class UploadFile(tk.Frame):
 
         # button for upload contract
         button2 = tk.Button(self, text="Page Two",
-                            bd=0, image=self.UploadContract, command=lambda: self.uploadfile())
+                            bd=0, image=self.UploadContract,
+                            command=lambda: self.uploadfile())
         button2.place(x=280, y=250)
 
         # button for home page
@@ -324,7 +392,8 @@ class UploadFile(tk.Frame):
 
     def uploadfile(self):
         self.file = filedialog.askopenfilename(
-            initialdir="/", title="Select A File", filetype=(("jpeg", "*.jpg"), ("All Files", "*.*")))
+            initialdir="/", title="Select A File",
+            filetype=(("jpeg", "*.jpg"), ("All Files", "*.*")))
         self.path.configure(text=self.file)
         print(self.file)
 
@@ -345,8 +414,9 @@ class Info1(tk.Frame):
         # button to save
         self.save = ImageTk.PhotoImage(
             file='image/save.png')
-        saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
-            self.info.get()))
+        saveButton = tk.Button(self, image=self.save, bd=0,
+                               command=lambda: self.saveInfo(
+                                   self.info.get()))
         saveButton.place(x=530, y=235)
 
         # label for state
@@ -392,8 +462,9 @@ class Info2(tk.Frame):
         # button to save
         self.save = ImageTk.PhotoImage(
             file='image/save.png')
-        saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
-            self.info.get()))
+        saveButton = tk.Button(self, image=self.save, bd=0,
+                               command=lambda: self.saveInfo(
+                                   self.info.get()))
         saveButton.place(x=530, y=235)
 
         # label for state
@@ -468,7 +539,8 @@ class ReadContract(tk.Frame):
 
         # button for upload contract
         button2 = tk.Button(self, text="Page Two",
-                            bd=0, image=self.UploadContract, command=lambda: self.uploadfile())
+                            bd=0, image=self.UploadContract,
+                            command=lambda: self.uploadfile())
         button2.place(x=280, y=250)
 
         # button for home page
@@ -491,7 +563,8 @@ class ReadContract(tk.Frame):
 
     def uploadfile(self):
         self.file = filedialog.askopenfilename(
-            initialdir="/", title="Select A File", filetype=(("jpeg", "*.jpg"), ("All Files", "*.*")))
+            initialdir="/", title="Select A File",
+            filetype=(("jpeg", "*.jpg"), ("All Files", "*.*")))
         self.path.configure(text=self.file)
         print(self.file)
         self.after(3000)
