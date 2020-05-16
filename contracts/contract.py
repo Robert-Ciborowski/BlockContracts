@@ -35,7 +35,7 @@ class Contract:
         print("ooooof")
         f = open(path, "w+")
         f.write("key, block_id, signature\n")
-        f.write(self.encryption_key + ", " + str(self.block_of_chain) + ", " +
+        f.write(self.encryption_key + "," + str(self.block_of_chain) + "," +
                 self.digital_signatures[whichSignature])
         f.close()
 

@@ -175,7 +175,7 @@ class UploadContract(tk.Frame):
             tk.messagebox.showwarning(title="Your contract",
                                       message="The contract you submitted has "
                                               "been flagged by the system as "
-                                              "ambiguous.\nYou may want to "
+                                              "very ambiguous.\nYou may want to "
                                               "rewrite the contract or refuse "
                                               "to sign it.")
         else:
@@ -251,7 +251,7 @@ class Signee1(tk.Frame):
         # encrypt = Encrypt()
         # add stuff like info = encrypt.scramble(encrypt)
         # encrypt.scramble()
-        EndUserApp.contract.data += "\n " + name + ": " + info + ", "
+        EndUserApp.contract.data += "\n#~#~" + name + ": " + info + ", "
         EndUserApp.contract.add_digital_signature(info)
         self.controller.show_frame(Signee2)
 
@@ -399,9 +399,10 @@ class Finish(tk.Frame):
 class UploadFile(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        self.label = tk.Label(self, text="Upload File", font=XLARGE_FONT)
+        self.label = tk.Label(self, text="Upload your .contract file", font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
         self.file = ''
+        self.controller = controller
 
         # image for upload button
         self.UploadContract = ImageTk.PhotoImage(
@@ -428,7 +429,7 @@ class UploadFile(tk.Frame):
 
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
-                            command=lambda: controller.show_frame(Info1))
+                            command=lambda: self.onNext())
         button2.place(x=380, y=450)
 
         # label for file path
@@ -442,13 +443,49 @@ class UploadFile(tk.Frame):
         self.path.configure(text=self.file)
         print(self.file)
 
+    def onNext(self):
+        text = ""
+
+        try:
+            EndUserApp.contract = Contract()
+            f = open(self.contract, "r")
+            text = f.read().split(',|\n')
+            EndUserApp.contract.encryption_key = text[3]
+            EndUserApp.contract.block_of_chain = int(text[4])
+            EndUserApp.contract.signature = int(text[5])
+            self.controller.show_frame(Info1)
+        except:
+            self.path.configure(text="Please upload a valid .contract file!")
+            return
+
+        string_splitter = StringSplitter(text)
+        string_splitter.string_splitter(EndUserApp.model.maxInputLength)
+        values = string_splitter.show_list()
+        is_ambiguous = EndUserApp.model.detect(values)
+
+        if is_ambiguous:
+            tk.messagebox.showwarning(title="Your contract",
+                                      message="The contract you submitted has "
+                                              "been flagged by the system as "
+                                              "very ambiguous.\nYou may want to "
+                                              "rewrite the contract or refuse "
+                                              "to sign it.")
+        else:
+            tk.messagebox.showwarning(title="Your contract",
+                                      message="The contract you submitted has "
+                                              "been flagged by the system as "
+                                              "safe! :)")
+
 
 class Info1(tk.Frame):
+    Signee1Info = ""
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.label = tk.Label(
             self, text="Enter your information ", font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
+        self.controller = controller
 
         # enter for info
         infoLabel = tk.Label(self, text="Info", font=LARGE_FONT)
@@ -483,20 +520,34 @@ class Info1(tk.Frame):
 
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
-                            command=lambda: controller.show_frame(Info2))
+                            command=lambda: self.onNext())
         button2.place(x=380, y=380)
 
     def saveInfo(self, info):
         print(info)
         self.inputState.configure(text="Save Successful")
 
+    def onNext(self):
+        info = self.info.get()
+
+        if info == "":
+            tk.messagebox.showerror(title="Error",
+                                    message="Info is invalid!")
+            return
+
+        Info1.Signee1Info = info
+        self.controller.show_frame(Info2)
+
 
 class Info2(tk.Frame):
+    Signee2Info = ""
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.label = tk.Label(
             self, text="Enter person #2 information", font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
+        self.controller = controller
 
         # enter for info
         infoLabel = tk.Label(self, text="Info", font=LARGE_FONT)
@@ -531,12 +582,25 @@ class Info2(tk.Frame):
 
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
-                            command=lambda: controller.show_frame(Result))
+                            command=lambda: Info2.onNext())
         button2.place(x=380, y=380)
 
     def saveInfo(self, info):
         print(info)
         self.inputState.configure(text="Save Successful")
+
+    def onNext(self):
+        info = self.info.get()
+
+        if info == "":
+            tk.messagebox.showerror(title="Error",
+                                    message="Info is invalid!")
+            return
+
+        Info2.Signee2Info = info
+        self.controller.show_frame(Result)
+
+        # verify results with blockchain!
 
 
 class Result(tk.Frame):
