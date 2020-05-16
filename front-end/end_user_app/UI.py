@@ -199,7 +199,7 @@ class Signee1(tk.Frame):
     def onNext(self):
         name = self.name.get()
         info = self.info.get()
-        encrypter = 
+        encrypter = None
         self.controller.show_frame(Signee2)
 
     def saveInfo(self, name, info):
