@@ -7,8 +7,10 @@ class StringSplitter:
         self.string_list = []
         self.bad = set()
         for punct in string.punctuation:
-            if punct != "'":
+            if punct != "'" or punct != "-":
                 self.bad.add(punct)
+        for num in '1234567890':
+            self.bad.add(num)
 
     def string_splitter(self, words_a_string):
         clean = self._strip_bad_chars()
