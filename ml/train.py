@@ -41,22 +41,23 @@ if __name__ == "__main__":
     oov_token = "<OOV>"
     training_size = 20000
 
-
     training_sentences = np.array(sentences[0:training_size])
     testing_sentences = np.array(sentences[training_size:])
 
     training_labels = np.array(labels[0:training_size])
     testing_labels = np.array(labels[training_size:])
 
-    model = AmbiguityDetector(0.25, Hyperparameters(0.15, 30, 50), vocab_size,
-                              embedding_dim, max_length, training_sentences)
+    model = AmbiguityDetector()
+    model.setup(0.25, Hyperparameters(0.15, 30, 50), vocab_size,
+                embedding_dim, max_length, training_sentences)
 
     layerParameters = [
         LayerParameter(24, "relu")
     ]
 
     model.createModel(layerParameters)
-    epochs, hist = model.trainModel(training_sentences, training_labels, testing_sentences,
+    epochs, hist = model.trainModel(training_sentences, training_labels,
+                                    testing_sentences,
                                     testing_labels)
     list_of_metrics_to_plot = model.listOfMetrics
     model.plotCurve(epochs, hist, list_of_metrics_to_plot)
@@ -69,5 +70,3 @@ if __name__ == "__main__":
 
     words = "former versace store clerk sues over secret 'black code' for minority shoppers"
     print(model.detect([words]))
-
-

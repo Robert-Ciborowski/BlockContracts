@@ -5,6 +5,9 @@ from tkinter import filedialog, messagebox
 import image
 import time as time
 from user_http import UserHTTP
+
+from ml.AmbiguityDetector import AmbiguityDetector
+from ml.LayerParameter import LayerParameter
 from utils.cypter import Encrypt, Decrypt
 from utils.StringSplitter import StringSplitter
 from contracts.contract import Contract
@@ -17,6 +20,7 @@ class EndUserApp(tk.Tk):
     contract = None
     userHTTP: UserHTTP
     currentContract: Contract
+    model = None
 
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -37,14 +41,22 @@ class EndUserApp(tk.Tk):
             'content': "Hello world!",
         }
 
-        print("Ummmm ---------------")
         self.userHTTP = UserHTTP()
         self.userHTTP.fetch_posts()
-        time.sleep(1)
         self.userHTTP.create_new_blockchain_transaction(post_object)
-        time.sleep(1)
         print(self.userHTTP.mine_transaction())
         self.currentContract = None
+
+        EndUserApp.model = AmbiguityDetector()
+        EndUserApp.model.setupWithDefaultValues("../../ml/data/sarcasm.json")
+
+        layerParameters = [
+            LayerParameter(24, "relu")
+        ]
+
+        EndUserApp.model.createModel(layerParameters)
+        EndUserApp.model.exportPath = "../../ml/exports/ambiguitydetector"
+        EndUserApp.model.load()
 
     def show_frame(self, cont):
         frame = self.frames[cont]
@@ -142,6 +154,8 @@ class UploadContract(tk.Frame):
         print(self.contract)
 
     def onNext(self):
+        text = ""
+
         try:
             EndUserApp.contract = Contract()
             f = open(self.contract, "r")
@@ -150,6 +164,27 @@ class UploadContract(tk.Frame):
             self.controller.show_frame(Signee1)
         except:
             self.path.configure(text="Please upload a valid contract!")
+            return
+
+        string_splitter = StringSplitter(text)
+        string_splitter.string_splitter(EndUserApp.model.maxInputLength)
+        values = string_splitter.show_list()
+        is_ambiguous = EndUserApp.model.detect(values)
+
+        if is_ambiguous:
+            tk.messagebox.showwarning(title="Your contract",
+                                      message="The contract you submitted has "
+                                              "been flagged by the system as "
+                                              "ambiguous.\nYou may want to "
+                                              "rewrite the contract or refuse "
+                                              "to sign it.")
+        else:
+            tk.messagebox.showwarning(title="Your contract",
+                                      message="The contract you submitted has "
+                                              "been flagged by the system as "
+                                              "safe! :)")
+
+
 
 
 class Signee1(tk.Frame):
@@ -217,6 +252,7 @@ class Signee1(tk.Frame):
         # add stuff like info = encrypt.scramble(encrypt)
         # encrypt.scramble()
         EndUserApp.contract.data += "\n " + name + ": " + info + ", "
+        EndUserApp.contract.add_digital_signature(info)
         self.controller.show_frame(Signee2)
 
     def saveInfo(self, name, info):
@@ -290,6 +326,7 @@ class Signee2(tk.Frame):
         # add stuff like info = encrypt.scramble(encrypt)
         # encrypt.scramble()
         EndUserApp.contract.data += name + ": " + info + ", "
+        EndUserApp.contract.add_digital_signature(info)
         Finish.uploadContract()
         self.controller.show_frame(Finish)
 
@@ -300,7 +337,7 @@ class Signee2(tk.Frame):
 
 
 class Finish(tk.Frame):
-    successText = ""
+    finishLabel = None
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -309,8 +346,9 @@ class Finish(tk.Frame):
         self.label = tk.Label(self, image=self.finish, font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
 
-        fnishLabel = tk.Label(self, text=self.successText, font=LARGE_FONT)
-        fnishLabel.place(x=320, y=100)
+        finishLabel = tk.Label(self, text="placeholder", font=LARGE_FONT)
+        finishLabel.place(x=320, y=100)
+        Finish.finishLabel = finishLabel
 
         # button for home page
         # image for home button
@@ -334,19 +372,26 @@ class Finish(tk.Frame):
         code, text = userHTTP.mine_transaction()
 
         if code != 200:
-            Finish.successText = "There was an error with creating your secure contract!"
+            print("HTTP Error " + str(code))
+            Finish.finishLabel.configure(text="There was an error with creating your secure contract!")
         else:
             try:
+                print(text)
                 EndUserApp.contract.block_of_chain = int(text)
-                path1 = "/contracts/" + Signee1.signee1Name + ".contract"
-                path2 = "/contracts/" + Signee2.signee2Name + ".contract"
+                path1 = "./contracts/" + Signee1.signee1Name + ".contract"
+                path2 = "./contracts/" + Signee2.signee2Name + ".contract"
+                print("sdsdsd")
                 EndUserApp.contract.export_to_files(path1, 0)
+                print("sdsdsd")
                 EndUserApp.contract.export_to_files(path2, 1)
-                Finish.successText = "Your secure contract has been completed." \
-                                     "\nSignee #1: " + path1 + "\nSignee #2: " + path2
+                Finish.finishLabel.configure(text="Your secure contract has been completed." \
+                                     "\nSignee #1: " + path1 + "\nSignee #2: " + path2)
+            except IOError as e:
+                print(e)
+                Finish.finishLabel.configure(text="There was an error with exporting your contract!")
             except:
                 print("Error creating final .contract file!")
-                Finish.successText = "There was an error with exporting your contract!"
+                Finish.finishLabel.configure(text="There was an error with exporting your contract!")
 
         EndUserApp.currentContract = None
 
