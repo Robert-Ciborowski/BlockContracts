@@ -37,19 +37,19 @@ canvas.pack()
 
 
 logo_image = ImageTk.PhotoImage(Image.open(
-    "./image/logo.png"))  # Logo and background
+    "image/logo.png"))  # Logo and background
 logo_label = tk.Label(root, image=logo_image)
 logo_label.place(relwidth=1, relheight=0.4)
 
 
 createContact_image = ImageTk.PhotoImage(
-    file='./image/create.png')  # image for create contact button
+    file='image/create.png')  # image for create contact button
 
 verifyContact_image = ImageTk.PhotoImage(
-    file='./image/verify.png')  # image for verify contact button
+    file='image/verify.png')  # image for verify contact button
 
 readContact_image = ImageTk.PhotoImage(  # image for read contact button
-    file='./image/read.png'
+    file='image/read.png'
 )
 
 createContact_button = tk.Button(

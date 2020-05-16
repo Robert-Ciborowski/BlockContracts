@@ -3,40 +3,46 @@ from PIL import ImageTk, Image
 from tkinter import ttk
 from tkinter import filedialog
 import image
+import time as time
+from user_http import UserHTTP
 
 LARGE_FONT = ("Verdana", 12)
 XLARGE_FONT = ("Verdana", 30)
 
 
-class SeaofBTCapp(tk.Tk):
-
+class EndUserApp(tk.Tk):
     def __init__(self, *args, **kwargs):
-
         tk.Tk.__init__(self, *args, **kwargs)
         container = tk.Frame(self)
-
         container.pack(side="top", fill="both", expand=True)
-
         self.frames = {}
 
         for F in (StartPage, UploadContract, Signee1, Finish, Signee2, UploadFile, Info1, Info2, Result, ReadContract, Result2):
-
             frame = F(container, self)
-
             self.frames[F] = frame
-
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(StartPage)
 
-    def show_frame(self, cont):
+        post_object = {
+            'author': "Tester",
+            'content': "Hello world!",
+        }
 
+        print("Ummmm ---------------")
+        self.userHTTP = UserHTTP()
+        self.userHTTP.fetch_posts()
+        time.sleep(1)
+        self.userHTTP.create_new_blockchain_transaction(post_object)
+        time.sleep(1)
+        print(self.userHTTP.mine_transaction())
+
+    def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
 
 
 class StartPage(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         canvas = tk.Canvas(self, height=700, width=800)
@@ -44,21 +50,21 @@ class StartPage(tk.Frame):
 
         # Logo and background
         self.logo_image = ImageTk.PhotoImage(Image.open(
-            "./image/logo.png"))
+            "image/logo.png"))
         logo_label = tk.Label(self, image=self.logo_image)
         logo_label.place(relwidth=1, relheight=0.4)
 
         # image for create contract button
         self.createContact_image = ImageTk.PhotoImage(
-            file='./image/create.png')
+            file='image/create.png')
 
         # image for vefiry contract button
         self.verifyContact_image = ImageTk.PhotoImage(
-            file='./image/verify.png')
+            file='image/verify.png')
 
         # image for read contract button
         self.readContact_image = ImageTk.PhotoImage(  # image for read contact button
-            file='./image/read.png')
+            file='image/read.png')
 
         # create contract button
         button = tk.Button(self, image=self.createContact_image, bd=0,
@@ -77,25 +83,23 @@ class StartPage(tk.Frame):
 
 
 class UploadContract(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.label = tk.Label(self, text="Upload Contract", font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
-
         self.contract = ''
 
         # image for upload button
         self.UploadContract = ImageTk.PhotoImage(
-            file='./image/upload.png')
+            file='image/upload.png')
 
         # image for home button
         self.home = ImageTk.PhotoImage(
-            file='./image/home.png')
+            file='image/home.png')
 
         # image for next button
         self.next = ImageTk.PhotoImage(
-            file='./image/next1.png')
+            file='image/next1.png')
 
         # button for upload contract
         button2 = tk.Button(self, text="Page Two",
@@ -144,7 +148,7 @@ class Signee1(tk.Frame):
 
         # button to save
         self.save = ImageTk.PhotoImage(
-            file='./image/save.png')
+            file='image/save.png')
         saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
             self.name.get(), self.info.get()))
         saveButton.place(x=530, y=190)
@@ -155,11 +159,11 @@ class Signee1(tk.Frame):
 
         # image for home button
         self.home = ImageTk.PhotoImage(
-            file='./image/home.png')
+            file='image/home.png')
 
         # image for next button
         self.next = ImageTk.PhotoImage(
-            file='./image/next1.png')
+            file='image/next1.png')
 
         # button for home page
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
@@ -178,7 +182,6 @@ class Signee1(tk.Frame):
 
 
 class Signee2(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.label = tk.Label(self, text="Signee #2", font=XLARGE_FONT)
@@ -198,7 +201,7 @@ class Signee2(tk.Frame):
 
         # button to save
         self.save = ImageTk.PhotoImage(
-            file='./image/save.png')
+            file='image/save.png')
         saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
             self.name.get(), self.info.get()))
         saveButton.place(x=530, y=190)
@@ -209,11 +212,11 @@ class Signee2(tk.Frame):
 
         # image for home button
         self.home = ImageTk.PhotoImage(
-            file='./image/home.png')
+            file='image/home.png')
 
         # image for next button
         self.next = ImageTk.PhotoImage(
-            file='./image/next1.png')
+            file='image/next1.png')
 
         # button for home page
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
@@ -232,12 +235,11 @@ class Signee2(tk.Frame):
 
 
 class Finish(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
         self.finish = ImageTk.PhotoImage(
-            file='./image/finish1.png')
+            file='image/finish1.png')
 
         self.label = tk.Label(self, image=self.finish, font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
@@ -248,7 +250,7 @@ class Finish(tk.Frame):
         # button for home page
         # image for home button
         self.home = ImageTk.PhotoImage(
-            file='./image/home.png')
+            file='image/home.png')
 
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
                             command=lambda: controller.show_frame(StartPage))
@@ -256,25 +258,23 @@ class Finish(tk.Frame):
 
 
 class UploadFile(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.label = tk.Label(self, text="Upload File", font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
-
         self.file = ''
 
         # image for upload button
         self.UploadContract = ImageTk.PhotoImage(
-            file='./image/upload.png')
+            file='image/upload.png')
 
         # image for home button
         self.home = ImageTk.PhotoImage(
-            file='./image/home.png')
+            file='image/home.png')
 
         # image for next button
         self.next = ImageTk.PhotoImage(
-            file='./image/next1.png')
+            file='image/next1.png')
 
         # button for upload contract
         button2 = tk.Button(self, text="Page Two",
@@ -303,7 +303,6 @@ class UploadFile(tk.Frame):
 
 
 class Info1(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.label = tk.Label(
@@ -318,7 +317,7 @@ class Info1(tk.Frame):
 
         # button to save
         self.save = ImageTk.PhotoImage(
-            file='./image/save.png')
+            file='image/save.png')
         saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
             self.info.get()))
         saveButton.place(x=530, y=235)
@@ -329,11 +328,11 @@ class Info1(tk.Frame):
 
         # image for home button
         self.home = ImageTk.PhotoImage(
-            file='./image/home.png')
+            file='image/home.png')
 
         # image for next button
         self.next = ImageTk.PhotoImage(
-            file='./image/next1.png')
+            file='image/next1.png')
 
         # button for home page
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
@@ -351,13 +350,13 @@ class Info1(tk.Frame):
 
 
 class Info2(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.label = tk.Label(
             self, text="Enter person #2 information", font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
-     # enter for info
+
+        # enter for info
         infoLabel = tk.Label(self, text="Info", font=LARGE_FONT)
         infoLabel.place(x=75, y=295)
         self.info = tk.Entry(self)
@@ -365,7 +364,7 @@ class Info2(tk.Frame):
 
         # button to save
         self.save = ImageTk.PhotoImage(
-            file='./image/save.png')
+            file='image/save.png')
         saveButton = tk.Button(self, image=self.save, bd=0, command=lambda: self.saveInfo(
             self.info.get()))
         saveButton.place(x=530, y=235)
@@ -376,11 +375,11 @@ class Info2(tk.Frame):
 
         # image for home button
         self.home = ImageTk.PhotoImage(
-            file='./image/home.png')
+            file='image/home.png')
 
         # image for next button
         self.next = ImageTk.PhotoImage(
-            file='./image/next1.png')
+            file='image/next1.png')
 
         # button for home page
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
@@ -398,13 +397,12 @@ class Info2(tk.Frame):
 
 
 class Result(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
         # image for result button
         self.result = ImageTk.PhotoImage(
-            file='./image/result1.png')
+            file='image/result1.png')
         self.label = tk.Label(self, image=self.result)
         self.label.pack(pady=50, padx=10)
 
@@ -415,7 +413,7 @@ class Result(tk.Frame):
 
         # image for home button
         self.home = ImageTk.PhotoImage(
-            file='./image/home.png')
+            file='image/home.png')
 
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
                             command=lambda: controller.show_frame(StartPage))
@@ -423,25 +421,23 @@ class Result(tk.Frame):
 
 
 class ReadContract(tk.Frame):
-
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.label = tk.Label(self, text="Upload File", font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
-
         self.file = ''
 
         # image for upload button
         self.UploadContract = ImageTk.PhotoImage(
-            file='./image/upload.png')
+            file='image/upload.png')
 
         # image for home button
         self.home = ImageTk.PhotoImage(
-            file='./image/home.png')
+            file='image/home.png')
 
         # image for next button
         self.next = ImageTk.PhotoImage(
-            file='./image/next1.png')
+            file='image/next1.png')
 
         # button for upload contract
         button2 = tk.Button(self, text="Page Two",
@@ -481,7 +477,7 @@ class Result2(tk.Frame):
 
         # image for result button
         self.result = ImageTk.PhotoImage(
-            file='./image/result1.png')
+            file='image/result1.png')
         self.label = tk.Label(self, image=self.result)
         self.label.pack(pady=50, padx=10)
 
@@ -492,12 +488,8 @@ class Result2(tk.Frame):
 
         # image for home button
         self.home = ImageTk.PhotoImage(
-            file='./image/home.png')
+            file='image/home.png')
 
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=290, y=450)
-
-
-app = SeaofBTCapp()
-app.mainloop()
