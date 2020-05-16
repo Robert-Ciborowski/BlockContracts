@@ -25,36 +25,54 @@ class Encrypt:
 
     """
 
-    def __init__(self, file):
+    def __init__(self, file=None):
         """
         :param file:
         Takes in the file path that needs to be encrypted.
         Does not do anything if the file does not exist.
         """
         self.file_path = file
-        if not os.path.isfile(file):
-            print("File Does Not Exist")
+        if file is None:
+            self.data = None
+        elif not os.path.isfile(file):
+            self.data = None
+            print("File Does Not Exist. Moving On")
         else:
             f = open(file, 'rb')
             data = f.read()
             self.data = data
             self.key = None
 
-    def scramble(self):
-        self.key = Fernet.generate_key()
-        new_crypter = Fernet(self.key)
-        encrypted = new_crypter.encrypt(self.data)
-        self.data = encrypted
-        self.save_to(self.file_path)
-        self.show_key()
+    def scramble(self, data=None):
+        """
+        Encrypt Can take both string or file, however file takes priority
+        """
+        if data is None and self.data is None:
+            print("No Data to Encrypt")
+            return None
+        elif self.file_path is not None:
+            self.key = Fernet.generate_key()
+            new_crypter = Fernet(self.key)
+            encrypted = new_crypter.encrypt(self.data)
+            self.data = encrypted
+            self._save_to(self.file_path)
+            self.show_key()
+        else:
+            self.key = Fernet.generate_key()
+            new_crypter = Fernet(self.key)
+            encrypted = new_crypter.encrypt(bytes(data, 'utf8'))
+            self.data = encrypted
+            self.show_key()
+            print('encrypted: ' + str(self.data, 'utf8'))
+            return self.data
 
-    def save_to(self, file_path):
+    def _save_to(self, file_path):
         try:
             folder = open(file_path, "wb")
             folder.write(self.data)
             folder.close()
 
-            folder = open('../keys.key', 'wb')
+            folder = open('keys.key', 'wb')
             folder.write(self.key)
             folder.close()
         except:
@@ -74,16 +92,19 @@ class Decrypt:
     Decryptes files
     """
 
-    def __init__(self, file):
+    def __init__(self, file=None):
         self.file = file
-        if not os.path.isfile(file):
-            print("File Does Not Exist")
+        if file is None:
+            self.data = None
+        elif not os.path.isfile(file):
+            self.data = None
+            print("File Does Not Exist. Moving On")
         else:
             f = open(file, 'rb')
             data = f.read()
             self.data = data
 
-    def unscramble(self, key, file_path=''):
+    def unscramble(self, key, data=None, file_path=''):
         """
         Takes in a file path to where the decrypted messages goes
         and a key. Default path is the original file
@@ -91,28 +112,45 @@ class Decrypt:
         :param key:
         :return:
         """
+        if self.data is None and data is None:
+            print("NO DATA TO DECRYPT")
+            return None
+        elif self.data is not None:
 
-        try:
-            crypter = Fernet(key)
-            message = crypter.decrypt(self.data)
             try:
+                crypter = Fernet(key)
+                message = crypter.decrypt(self.data)
+                try:
 
-                if file_path == '':
-                    path = self.file
-                else:
-                    path = file_path
-                folder = open(path, "wb")
-                folder.write(message)
-                folder.close()
+                    if file_path == '':
+                        path = self.file
+                    else:
+                        path = file_path
+                    folder = open(path, "wb")
+                    folder.write(message)
+                    folder.close()
+                except:
+                    print('Failed to decrypt data')
             except:
-                print('Failed to decrypt data')
-        except:
-            print("Invalid Key")
+                print("Invalid Key")
+        else:
+
+            try:
+                crypter = Fernet(key)
+                message = crypter.decrypt(bytes(data, 'utf8'))
+                try:
+
+                    print('msg: ' + str(message, 'utf8'))
+                    return message
+                except:
+                    print('Failed to decrypt data')
+            except:
+                print("Invalid Key")
 
 
 if __name__ == '__main__':
-    # test1 = Encrypt('buzzfed.html')
-    # test1.scramble()
-    test2 = Decrypt('../buzzfed.html')
-    test2.unscramble('bWOfotVxNfOUJaVVsewl9jMy2iS2vR9sgOC6CQ9tIO8=')
+    # test1 = Encrypt()
+    # test1.scramble('hello')
+    test2 = Decrypt()
+    test2.unscramble('8zDJ96latqvuZQNvUJmpMax2WNx2QkW5B4-32Qillf4=', 'gAAAAABewFVDvOMcp5EG4WfK7X6m_4V3iyxGjc_YfItmelfgwLtEqhfgmrXA4xEDDuiZhqcwYmamHvTUSWhXIUYdGodbOJq6fw==')
 
