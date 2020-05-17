@@ -5,6 +5,8 @@ A class which represents a corporate contract.
 import csv
 from typing import List
 
+from utils.cypter import Encrypt
+
 
 class Contract:
     data: str
@@ -12,6 +14,7 @@ class Contract:
     encryption_key: str
     block_of_chain: int
     digital_signatures: List
+    digital_signature_keys: List
 
     def __init__(self):
         self.data = ""
@@ -19,14 +22,15 @@ class Contract:
         self.encryption_key = ""
         self.block_of_chain = 0
         self.digital_signatures = []
+        self.digital_signature_keys = []
 
     def add_digital_signature(self, signature: str):
         self.digital_signatures.append(signature)
 
-    def encrypt_data(self) -> str:
-        print("REPLACE THIS WITH STUFF")
-        self.encrypted_data = self.data
-        return self.encrypted_data
+    def encrypt_data(self):
+        encrypt = Encrypt()
+        self.encrypted_data = encrypt.scramble(self.data)
+        return self.encrypted_data, encrypt.show_key()
 
     def export_to_files(self, path: str, whichSignature: int):
         if whichSignature < 0 or whichSignature >= len(self.digital_signatures):
@@ -34,7 +38,8 @@ class Contract:
 
         print("ooooof")
         f = open(path, "w+")
-        f.write("key, block_id, signature\n")
+        print("ooooof2")
+        f.write("key,block_id,signature\n")
         f.write(self.encryption_key + "," + str(self.block_of_chain) + "," +
                 self.digital_signatures[whichSignature])
         f.close()

@@ -79,11 +79,6 @@ class Encrypt:
             print('Failed to save data')
 
     def show_key(self):
-        """
-        Shut up robert
-        :return:
-        """
-        print(self.key)
         return self.key
 
 
