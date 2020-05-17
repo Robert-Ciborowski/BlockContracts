@@ -173,20 +173,62 @@ class UploadContract(tk.Frame):
             file='image/next1.png')
 
         # button for upload contract
-        button2 = tk.Button(self, text="Page Two",
+        button = tk.Button(self, text="Page Two",
                             bd=0, image=self.UploadContract,
                             command=lambda: self.uploadfile())
-        button2.place(x=280, y=250)
+        button.place(x=280, y=250)
+
+        # upload hover animations
+        def upload_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/upload_hover.png')
+            button['image'] = upload_hover_img
+            button.image = upload_hover_img
+
+        def upload_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/upload.png')
+            button['image'] = upload_hover_img
+            button.image = upload_hover_img
+
+        button.bind("<Enter>", upload_hover)
+        button.bind('<Leave>', upload_revert)
 
         # button for home page
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=180, y=450)
 
+        # home button hover animations
+        def home_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home_hover.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        def home_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        button1.bind("<Enter>", home_hover)
+        button1.bind('<Leave>', home_revert)
+
         # button for next page
-        button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
+        button_next = tk.Button(self, text="Page Two", bd=0, image=self.next,
                             command=lambda: self.onNext())
-        button2.place(x=380, y=450)
+        button_next.place(x=380, y=450)
+
+        # next button hover animation
+        def next_hover(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next_hover.png')
+            button_next['image'] = next_hover_img
+            button_next.image = next_hover_img
+
+        def next_revert(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next1.png')
+            button_next['image'] = next_hover_img
+            button_next.image = next_hover_img
+
+        button_next.bind("<Enter>", next_hover)
+        button_next.bind('<Leave>', next_revert)
 
         # label for file path
         self.path = tk.Label(self, text="No File been upload yet")
@@ -228,8 +270,6 @@ class UploadContract(tk.Frame):
                                       message="The contract you submitted has "
                                               "been flagged by the system as "
                                               "safe! :)")
-
-
 
 
 class Signee1(tk.Frame):
