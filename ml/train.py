@@ -48,7 +48,7 @@ if __name__ == "__main__":
     testing_labels = np.array(labels[training_size:])
 
     model = AmbiguityDetector()
-    model.setup(0.25, Hyperparameters(0.15, 30, 50), vocab_size,
+    model.setup(0.25, Hyperparameters(0.10, 50, 50), vocab_size,
                 embedding_dim, max_length, training_sentences)
 
     layerParameters = [
