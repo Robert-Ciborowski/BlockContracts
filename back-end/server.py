@@ -30,7 +30,7 @@ def new_transaction():
     :return: a success/error string, HTTP error code
     """
     tx_data = request.get_json()
-    required_fields = ["author", "content"]
+    required_fields = ["content"]
 
     for field in required_fields:
         if not tx_data.get(field):
@@ -67,7 +67,7 @@ def mine_unconfirmed_transactions():
     result = blockchain.mine()
 
     if not result:
-        return "No transactions to mine"
+        return "-1"
     else:
         # Making sure we have the longest chain before announcing to the network
         chain_length = len(blockchain.chain)
@@ -77,7 +77,7 @@ def mine_unconfirmed_transactions():
             # announce the recently mined block to the network
             announce_new_block(blockchain.get_last_block)
 
-        return "Block #{} is mined.".format(blockchain.get_last_block.index)
+        return "{}".format(blockchain.get_last_block.index)
 
 
 @app.route('/register_node', methods=['POST'])

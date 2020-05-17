@@ -60,10 +60,8 @@ def submit_textarea():
     Creates a new transaction via our application.
     """
     post_content = request.form["content"]
-    author = request.form["author"]
 
     post_object = {
-        'author': author,
         'content': post_content,
     }
 

@@ -13,27 +13,29 @@ class Contract:
     block_of_chain: int
     digital_signatures: List
 
-    def Contract(self):
+    def __init__(self):
         self.data = ""
         self.encrypted_data = ""
         self.encryption_key = ""
         self.block_of_chain = 0
         self.digital_signatures = []
 
-    def add_digital_sisgnature(self, signature: str):
+    def add_digital_signature(self, signature: str):
         self.digital_signatures.append(signature)
 
     def encrypt_data(self) -> str:
         print("REPLACE THIS WITH STUFF")
+        self.encrypted_data = self.data
         return self.encrypted_data
 
-    def export_to_file(self, path: str, whichSignature: int):
+    def export_to_files(self, path: str, whichSignature: int):
         if whichSignature < 0 or whichSignature >= len(self.digital_signatures):
             raise Exception(str(whichSignature + " does not exist!"))
 
-        f = open(path, "w")
+        print("ooooof")
+        f = open(path, "w+")
         f.write("key, block_id, signature\n")
-        f.write(self.encryption_key + ", " + str(self.block_of_chain) + ", " +
+        f.write(self.encryption_key + "," + str(self.block_of_chain) + "," +
                 self.digital_signatures[whichSignature])
         f.close()
 

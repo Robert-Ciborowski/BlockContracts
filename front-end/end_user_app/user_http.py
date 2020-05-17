@@ -14,7 +14,6 @@ class UserHTTP:
     guaranteed_node_address: str
 
     def __init__(self):
-        print("UserHTTPUserHTTPUserHTTPUserHTTP")
         self.guaranteed_node_address = "http://165.22.236.136:3000"
 
     def fetch_posts(self) -> List:
@@ -49,11 +48,10 @@ class UserHTTP:
                       json=post_object,
                       headers={'Content-type': 'application/json'})
 
-
     def timestamp_to_string(self, epoch_time):
         return datetime.datetime.fromtimestamp(epoch_time).strftime('%H:%M')
 
     def mine_transaction(self) -> int:
         get_chain_address = "{}/mine".format(self.guaranteed_node_address)
         response = requests.get(get_chain_address)
-        return response.status_code
+        return response.status_code, response.text
