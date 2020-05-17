@@ -734,7 +734,7 @@ class ReadContract(tk.Frame):
     def uploadfile(self):
         self.file = filedialog.askopenfilename(
             initialdir="/", title="Select A File",
-            filetype=(("text", "*.txt"), ("All Files", "*.*")))
+            filetype=(("contract", "*.contract"), ("All Files", "*.*")))
         self.path.configure(text=self.file)
         self.after(3000)
         self.inputState.configure(text="Upload Successful")
@@ -748,7 +748,37 @@ class ReadContract(tk.Frame):
             EndUserApp.contract.encryption_key = text[3]
             EndUserApp.contract.block_of_chain = int(text[4])
             EndUserApp.contract.add_digital_signature(text[5])
+
+            # verify results with blockchain!
+            posts = EndUserApp.userHTTP.fetch_posts()
+            whichPost = EndUserApp.contract.block_of_chain
+
+            if len(posts) <= whichPost - 1:
+                tk.messagebox.showerror(title="Error",
+                                        message="Error!")
+                return
+
+            post = posts[len(posts) - whichPost]
+            content = post["content"]
+            decrypt = Decrypt()
+            content = decrypt.unscramble(
+                bytes(EndUserApp.contract.encryption_key, 'utf8'),
+                content)
+            content = str(content).split("#~#~")[0]
+            path = "./saved_contracts/exported_contract.txt"
+            print(path)
+            f.close()
+
+            try:
+                f = open(path, "w+")
+                f.write(content)
+                f.close()
+            except:
+                self.path.configure(text="Error with contract!")
+                return
+
             self.controller.show_frame(Result2)
+
         except:
             self.path.configure(text="Please upload a valid .contract file!")
 
@@ -766,7 +796,7 @@ class Result2(tk.Frame):
 
         # label for result text
         self.resultText = tk.Label(
-            self, text='result text 123 123 123', font=LARGE_FONT)
+            self, text='Export complete: saved_contracts/exported_contract.txt', font=LARGE_FONT)
         self.resultText.pack(pady=60, padx=10)
 
         # image for home button
