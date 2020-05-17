@@ -482,8 +482,6 @@ class UploadFile(tk.Frame):
         print(self.file)
 
     def onNext(self):
-        text = ""
-
         try:
             EndUserApp.contract = Contract()
             f = open(self.file, "r")
@@ -695,6 +693,7 @@ class ReadContract(tk.Frame):
         self.label = tk.Label(self, text="Upload File", font=XLARGE_FONT)
         self.label.pack(pady=50, padx=10)
         self.file = ''
+        self.controller = controller
 
         # image for upload button
         self.UploadContract = ImageTk.PhotoImage(
@@ -721,7 +720,7 @@ class ReadContract(tk.Frame):
 
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
-                            command=lambda: controller.show_frame(Result2))
+                            command=lambda: self.onNext())
         button2.place(x=380, y=490)
 
         # label for file path
@@ -739,6 +738,20 @@ class ReadContract(tk.Frame):
         self.path.configure(text=self.file)
         self.after(3000)
         self.inputState.configure(text="Upload Successful")
+
+    def onNext(self):
+        try:
+            EndUserApp.contract = Contract()
+            f = open(self.file, "r")
+            text = f.read()
+            text = re.split(r',|\n', text)
+            EndUserApp.contract.encryption_key = text[3]
+            EndUserApp.contract.block_of_chain = int(text[4])
+            EndUserApp.contract.add_digital_signature(text[5])
+            self.controller.show_frame(Result2)
+        except:
+            self.path.configure(text="Please upload a valid .contract file!")
+
 
 
 class Result2(tk.Frame):
