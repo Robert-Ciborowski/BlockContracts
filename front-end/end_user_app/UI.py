@@ -74,7 +74,7 @@ class StartPage(tk.Frame):
         self.logo_image = ImageTk.PhotoImage(Image.open(
             "image/logo.png"))
         logo_label = tk.Label(self, image=self.logo_image)
-        logo_label.place(relwidth=1, relheight=0.4)
+        logo_label.place(x=2, y=0, relwidth=1, relheight=0.4)
 
         # image for create contract button
         self.createContact_image = ImageTk.PhotoImage(
@@ -95,16 +95,61 @@ class StartPage(tk.Frame):
                                UploadContract))
         button.place(x=300, y=290)
 
+        # hover animation for create contract
+        def create_contract_button_hover(e):
+            create_contract_hover_img = ImageTk.PhotoImage(file='image/create_hover.png')
+            button["image"] = create_contract_hover_img
+            button.image = create_contract_hover_img
+
+        def create_contract_revert(e):
+            create_contract_hover_img = ImageTk.PhotoImage(
+                file='image/create.png')
+            button["image"] = create_contract_hover_img
+            button.image = create_contract_hover_img
+
+        button.bind("<Enter>", create_contract_button_hover)
+        button.bind("<Leave>", create_contract_revert)
+
         # verify contract button
         button2 = tk.Button(self, image=self.verifyContact_image, bd=0,
                             command=lambda: controller.show_frame(UploadFile))
         button2.place(x=300, y=375)
+
+        def verify_contract_button_hover(e):
+            verify_contract_hover_img = ImageTk.PhotoImage(file='image/verify_hover.png')
+            button2["image"] = verify_contract_hover_img
+            button2.image = verify_contract_hover_img
+
+        def create_verify_revert(e):
+            verify_contract_hover_img = ImageTk.PhotoImage(
+                file='image/verify.png')
+            button2["image"] = verify_contract_hover_img
+            button2.image = verify_contract_hover_img
+
+        button2.bind("<Enter>", verify_contract_button_hover)
+        button2.bind("<Leave>", create_verify_revert)
 
         # read contract button
         button3 = tk.Button(self, image=self.readContact_image,
                             bd=0,
                             command=lambda: controller.show_frame(ReadContract))
         button3.place(x=300, y=460)
+
+        # read contract button hover animation
+
+        def read_contract_button_hover(e):
+            read_contract_hover_img = ImageTk.PhotoImage(file='image/read_hover.png')
+            button3["image"] = read_contract_hover_img
+            button3.image = read_contract_hover_img
+
+        def read_contract_revert(e):
+            read_contract_hover_img = ImageTk.PhotoImage(
+                file='image/read.png')
+            button3["image"] = read_contract_hover_img
+            button3.image = read_contract_hover_img
+
+        button3.bind("<Enter>", read_contract_button_hover)
+        button3.bind("<Leave>", read_contract_revert)
 
 
 class UploadContract(tk.Frame):
