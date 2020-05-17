@@ -318,10 +318,38 @@ class Signee1(tk.Frame):
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=180, y=380)
 
+        # home button animation
+        def home_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home_hover.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        def home_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        button1.bind("<Enter>", home_hover)
+        button1.bind('<Leave>', home_revert)
+
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
                             command=lambda: self.onNext())
         button2.place(x=380, y=380)
+
+        # next button hover animation
+        def next_hover(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next_hover.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        def next_revert(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next1.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        button2.bind("<Enter>", next_hover)
+        button2.bind('<Leave>', next_revert)
 
     def onNext(self):
         name = self.name.get()
@@ -388,10 +416,38 @@ class Signee2(tk.Frame):
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=180, y=380)
 
+        # home button animation
+        def home_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home_hover.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        def home_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        button1.bind("<Enter>", home_hover)
+        button1.bind('<Leave>', home_revert)
+
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
                             command=lambda: self.onNext())
         button2.place(x=380, y=380)
+
+        # next button hover animation
+        def next_hover(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next_hover.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        def next_revert(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next1.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        button2.bind("<Enter>", next_hover)
+        button2.bind('<Leave>', next_revert)
 
     def onNext(self):
         name = self.name.get()
@@ -437,6 +493,20 @@ class Finish(tk.Frame):
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=290, y=450)
+
+        # home button animation
+        def home_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home_hover.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        def home_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        button1.bind("<Enter>", home_hover)
+        button1.bind('<Leave>', home_revert)
 
     @staticmethod
     def uploadContract():
@@ -495,20 +565,62 @@ class UploadFile(tk.Frame):
             file='image/next1.png')
 
         # button for upload contract
-        button2 = tk.Button(self, text="Page Two",
+        button = tk.Button(self, text="Page Two",
                             bd=0, image=self.UploadContract,
                             command=lambda: self.uploadfile())
-        button2.place(x=280, y=250)
+        button.place(x=280, y=250)
+
+        # upload hover animations
+        def upload_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/upload_hover.png')
+            button['image'] = upload_hover_img
+            button.image = upload_hover_img
+
+        def upload_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/upload.png')
+            button['image'] = upload_hover_img
+            button.image = upload_hover_img
+
+        button.bind("<Enter>", upload_hover)
+        button.bind('<Leave>', upload_revert)
 
         # button for home page
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=180, y=450)
 
+        # home button hover animations
+        def home_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home_hover.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        def home_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        button1.bind("<Enter>", home_hover)
+        button1.bind('<Leave>', home_revert)
+
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
                             command=lambda: self.onNext())
         button2.place(x=380, y=450)
+
+        # next button hover animation
+        def next_hover(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next_hover.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        def next_revert(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next1.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        button2.bind("<Enter>", next_hover)
+        button2.bind('<Leave>', next_revert)
 
         # label for file path
         self.path = tk.Label(self, text="No File been upload yet")
@@ -576,10 +688,38 @@ class Info1(tk.Frame):
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=180, y=380)
 
+        # home button hover animations
+        def home_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home_hover.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        def home_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        button1.bind("<Enter>", home_hover)
+        button1.bind('<Leave>', home_revert)
+
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
                             command=lambda: self.onNext())
         button2.place(x=380, y=380)
+
+        # next button hover animation
+        def next_hover(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next_hover.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        def next_revert(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next1.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        button2.bind("<Enter>", next_hover)
+        button2.bind('<Leave>', next_revert)
 
     def saveInfo(self, info):
         self.inputState.configure(text="Save Successful")
@@ -637,10 +777,38 @@ class Info2(tk.Frame):
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=180, y=380)
 
+        # home button hover animations
+        def home_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home_hover.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        def home_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        button1.bind("<Enter>", home_hover)
+        button1.bind('<Leave>', home_revert)
+
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
                             command=lambda: self.onNext())
         button2.place(x=380, y=380)
+
+        # next button hover animation
+        def next_hover(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next_hover.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        def next_revert(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next1.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        button2.bind("<Enter>", next_hover)
+        button2.bind('<Leave>', next_revert)
 
     def saveInfo(self, info):
         self.inputState.configure(text="Save Successful")
@@ -726,6 +894,20 @@ class Result(tk.Frame):
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=290, y=450)
 
+        # home button hover animations
+        def home_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home_hover.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        def home_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        button1.bind("<Enter>", home_hover)
+        button1.bind('<Leave>', home_revert)
+
 
 class ReadContract(tk.Frame):
     def __init__(self, parent, controller):
@@ -748,20 +930,62 @@ class ReadContract(tk.Frame):
             file='image/next1.png')
 
         # button for upload contract
-        button2 = tk.Button(self, text="Page Two",
+        button = tk.Button(self, text="Page Two",
                             bd=0, image=self.UploadContract,
                             command=lambda: self.uploadfile())
-        button2.place(x=280, y=250)
+        button.place(x=280, y=250)
+
+        # upload hover animations
+        def upload_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/upload_hover.png')
+            button['image'] = upload_hover_img
+            button.image = upload_hover_img
+
+        def upload_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/upload.png')
+            button['image'] = upload_hover_img
+            button.image = upload_hover_img
+
+        button.bind("<Enter>", upload_hover)
+        button.bind('<Leave>', upload_revert)
 
         # button for home page
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=180, y=490)
 
+        # home button hover animations
+        def home_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home_hover.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        def home_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        button1.bind("<Enter>", home_hover)
+        button1.bind('<Leave>', home_revert)
+
         # button for next page
         button2 = tk.Button(self, text="Page Two", bd=0, image=self.next,
                             command=lambda: self.onNext())
         button2.place(x=380, y=490)
+
+        # next button hover animation
+        def next_hover(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next_hover.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        def next_revert(e):
+            next_hover_img = ImageTk.PhotoImage(file='image/next1.png')
+            button2['image'] = next_hover_img
+            button2.image = next_hover_img
+
+        button2.bind("<Enter>", next_hover)
+        button2.bind('<Leave>', next_revert)
 
         # label for file path
         self.path = tk.Label(self, text="No File been upload yet")
@@ -823,7 +1047,6 @@ class ReadContract(tk.Frame):
             self.path.configure(text="Please upload a valid .contract file!")
 
 
-
 class Result2(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -846,3 +1069,17 @@ class Result2(tk.Frame):
         button1 = tk.Button(self, text="Back to Home", bd=0, image=self.home,
                             command=lambda: controller.show_frame(StartPage))
         button1.place(x=290, y=450)
+
+        # home button hover animations
+        def home_hover(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home_hover.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        def home_revert(e):
+            upload_hover_img = ImageTk.PhotoImage(file='image/home.png')
+            button1['image'] = upload_hover_img
+            button1.image = upload_hover_img
+
+        button1.bind("<Enter>", home_hover)
+        button1.bind('<Leave>', home_revert)
