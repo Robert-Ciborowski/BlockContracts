@@ -1,6 +1,4 @@
 # BlockContracts
-Made for RUHacks 2020.
-
 ## Our mission
 We want to make corporate contracts more secure by use of blockchain and machine learning technology.
 - _We want contracts to be tamper-proof._ Conditions in paper contracts could be illegally modified after the contracts are signed.
